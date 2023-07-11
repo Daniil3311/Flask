@@ -78,19 +78,19 @@ class OwnerView(MethodView):
         if "password" in json_data:
             json_data["password"] = hash_password(json_data["password"])
         with Session() as session:
-            user = get_owner(session, owner_id)
+            owner = get_owner(session, owner_id)
             for field, value in json_data.items():
-                setattr(user, field, value)
-            session.add(user)
+                setattr(owner, field, value)
+            session.add(owner)
             try:
                 session.commit()
             except IntegrityError:
-                raise HttpError(409, f'{json_data["username"]} is busy')
+                raise HttpError(409, f'{json_data["owner"]} is busy')
             return jsonify(
                 {
-                    "id": user.id,
-                    "username": user.username,
-                    "creation_time": user.creation_time.isoformat(),
+                    "id": owner.id,
+                    "owner": owner.owner,
+                    "creation_time": owner.creation_time.isoformat(),
                 }
             )
 
